@@ -74,9 +74,34 @@ h2{font-size:20px;font-weight:700;margin:28px 0 14px}
 .s4{background:#fffbeb}.s4 h4,.s4 li::before{color:var(--am)}
 
 .foot{text-align:center;color:#9ca3af;font-size:11px;padding-top:20px;margin-top:32px;border-top:1px solid var(--bd)}
+
+/* Password Gate */
+#pgate{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#0f172a,#1e293b);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif}
+#pgate .box{text-align:center;color:#fff}
+#pgate h2{font-size:24px;font-weight:700;margin-bottom:8px;color:#fff}
+#pgate p{font-size:13px;color:#94a3b8;margin-bottom:20px}
+#pgate input{width:260px;padding:10px 14px;border-radius:8px;border:1px solid #475569;background:#1e293b;color:#fff;font-size:14px;text-align:center;outline:none}
+#pgate input:focus{border-color:#3b82f6}
+#pgate .err{color:#f87171;font-size:12px;margin-top:8px;display:none}
+#pgate button{margin-top:14px;padding:10px 32px;border-radius:8px;border:none;background:#3b82f6;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#pgate button:hover{background:#2563eb}
+
 </style>
+
+<meta name="robots" content="noindex, nofollow">
 </head>
 <body>
+
+<div id="pgate">
+<div class="box">
+<h2>Iron Gummies 铁软糖 · 细分品类深度分析</h2>
+<p>请输入访问密码</p>
+<input type="password" id="pwd" placeholder="输入密码后按回车" onkeydown="if(event.key==='Enter')checkPwd()">
+<button onclick="checkPwd()">验证</button>
+<div class="err" id="perr">密码错误，请重试</div>
+</div>
+</div>
+
 <div class="wrap">
 
 <div class="hero">
@@ -324,6 +349,19 @@ h2{font-size:20px;font-weight:700;margin:28px 0 14px}
 
 </div>
 
+
+
+<script>
+const H='a039a69595e7c9460cf21cf9d5ace5dbe8d65afe1fe50150de6b96d8815ac15c';
+async function checkPwd(){
+ const v=document.getElementById('pwd').value;
+ const d=new TextEncoder().encode(v);
+ const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',d))).map(b=>b.toString(16).padStart(2,'0')).join('');
+ if(h===H){document.getElementById('pgate').style.display='none';sessionStorage.setItem('_a',H)}
+ else{document.getElementById('perr').style.display='block';document.getElementById('pwd').value=''}
+}
+(function(){if(sessionStorage.getItem('_a')===H)document.getElementById('pgate').style.display='none'})();
+</script>
 
 </body>
 </html>
